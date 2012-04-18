@@ -10,7 +10,7 @@
     Templates: {}
   };
 
-  App.Templates.Player = "<div class=\"play-button symbol\">|>&nbsp;</div>\n<div class=\"pause-button hidden symbol\">||&nbsp;</div>\n<div class=\"symbol\">[</div>\n<div class=\"seek-bar symbol\"></div>\n<div class=\"symbol\">&nbsp;</div>\n<div class=\"time symbol\"></div>\n<div class=\"symbol\">]</div><br/>";
+  App.Templates.Player = "<div class=\"play-button symbol\">|>&nbsp;</div>\n<div class=\"pause-button hidden symbol\">||&nbsp;</div>\n<div class=\"symbol\">[</div>\n<div class=\"seek-bar symbol\"></div>\n<div class=\"symbol\">&nbsp;</div>\n<div class=\"time symbol\"></div>\n<div class=\"symbol\">]</div>\n&nbsp;\n<a href=\"<%=homePage%>\" class=\"symbol\">[?]</a><br/>";
 
   Root.mnplayer = function() {
     return $('.mnplayer').each(function(i, ob) {
@@ -56,7 +56,9 @@
       return out;
     },
     render: function() {
-      this.$el.html(this.template);
+      this.$el.html(this.template, {
+        homePage: "https://github.com/lpenguin/mnplayer-js"
+      });
       this.$el.find('.seek-bar').html(this.makeSeekBar());
       this.$el.find('.time').html(buzz.toTimer(this.model.getTime()));
       return this.$el;
