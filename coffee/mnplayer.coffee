@@ -33,7 +33,7 @@ App.Views.Player = Backbone.View.extend
         @model.bind('timeupdate', @timeupdate)
         @model.bind 'durationchange', @durationchange
         if options.duration
-            @manualDuration = options.duration
+            @manualDuration = buzz.fromTimer options.duration
 
 #        _.bind @timeupdate, this
     timeupdate: () ->

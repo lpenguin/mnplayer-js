@@ -35,7 +35,9 @@
       this.model.parentView = this;
       this.model.bind('timeupdate', this.timeupdate);
       this.model.bind('durationchange', this.durationchange);
-      if (options.duration) return this.manualDuration = options.duration;
+      if (options.duration) {
+        return this.manualDuration = buzz.fromTimer(options.duration);
+      }
     },
     timeupdate: function() {
       this.parentView.$el.find('.seek-bar').html(this.parentView.makeSeekBar());
