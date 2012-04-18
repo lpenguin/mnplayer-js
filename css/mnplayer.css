@@ -9,7 +9,7 @@
     margin:0px;
 }
 
-.play-button:hover,.pause-button:hover{
+.play-button:hover,.pause-button:hover,.home-page:hover{
     font-weight: bold;
     cursor: pointer;
 }
@@ -18,3 +18,4 @@
     cursor: pointer;
     font-weight: bold;
 }
+

@@ -10,7 +10,7 @@
     Templates: {}
   };
 
-  App.Templates.Player = "<div class=\"play-button symbol\">|>&nbsp;</div>\n<div class=\"pause-button hidden symbol\">||&nbsp;</div>\n<div class=\"symbol\">[</div>\n<div class=\"seek-bar symbol\"></div>\n<div class=\"symbol\">&nbsp;</div>\n<div class=\"time symbol\"></div>\n<div class=\"symbol\">]</div>\n&nbsp;\n<a href=\"<%=homePage%>\" class=\"symbol\">[?]</a><br/>";
+  App.Templates.Player = "<div class=\"play-button symbol\">|>&nbsp;</div>\n<div class=\"pause-button hidden symbol\">||&nbsp;</div>\n<div class=\"symbol\">[</div>\n<div class=\"seek-bar symbol\"></div>\n<div class=\"symbol\">&nbsp;</div>\n<div class=\"time symbol\"></div>\n<div class=\"symbol\">]</div>\n&nbsp;\n<div class=\"symbol home-page\">[?]</div><br/>";
 
   Root.mnplayer = function() {
     return $('.mnplayer').each(function(i, ob) {
@@ -38,7 +38,8 @@
     events: {
       "click .play-button": "play",
       "click .pause-button": "pause",
-      "click .seek-bar": "seek"
+      "click .seek-bar": "seek",
+      "click .home-page": "homePage"
     },
     template: App.Templates.Player,
     className: "player-js",
@@ -56,9 +57,9 @@
       return out;
     },
     render: function() {
-      this.$el.html(this.template, {
+      this.$el.html(_.template(this.template, {
         homePage: "https://github.com/lpenguin/mnplayer-js"
-      });
+      }));
       this.$el.find('.seek-bar').html(this.makeSeekBar());
       this.$el.find('.time').html(buzz.toTimer(this.model.getTime()));
       return this.$el;
@@ -80,6 +81,9 @@
       x = e.pageX - e.target.offsetLeft;
       width = $(e.target).width();
       return this.model.setPercent(x / width * 100);
+    },
+    homePage: function() {
+      return window.open('https://github.com/lpenguin/mnplayer-js', '_newtab');
     }
   });
 

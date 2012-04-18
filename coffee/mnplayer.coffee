@@ -14,7 +14,7 @@ App.Templates.Player = """
     <div class="time symbol"></div>
     <div class="symbol">]</div>
     &nbsp;
-    <a href="<%=homePage%>" class="symbol">[?]</a><br/>
+    <div class="symbol home-page">[?]</div><br/>
 """
 
 Root.mnplayer = ( ) ->
@@ -40,6 +40,7 @@ App.Views.Player = Backbone.View.extend
         "click .play-button": "play"
         "click .pause-button": "pause"
         "click .seek-bar": "seek"
+        "click .home-page": "homePage"
     
     template: App.Templates.Player
     className: "player-js"
@@ -53,7 +54,7 @@ App.Views.Player = Backbone.View.extend
                 out += '-'
         return out
     render: () ->
-        @$el.html @template, homePage: "https://github.com/lpenguin/mnplayer-js"
+        @$el.html _.template @template, homePage: "https://github.com/lpenguin/mnplayer-js"
         @$el.find('.seek-bar').html @makeSeekBar()
         @$el.find('.time').html buzz.toTimer @model.getTime()
         return @$el
@@ -70,6 +71,8 @@ App.Views.Player = Backbone.View.extend
         x = e.pageX - e.target.offsetLeft;
         width = $(e.target).width()
         @model.setPercent x/width*100
+    homePage: () ->
+        window.open('https://github.com/lpenguin/mnplayer-js','_newtab');
 
 
 
