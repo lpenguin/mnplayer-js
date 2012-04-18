@@ -14,26 +14,42 @@
 
   Root.mnplayer = function() {
     return $('.mnplayer').each(function(i, ob) {
-      var audio, player, url;
+      var audio, duration, player, url;
       url = $(ob).attr('url');
-      audio = new buzz.sound(url);
+      duration = $(ob).attr('duration');
+      audio = new buzz.sound(url, {
+        preload: true,
+        loop: false
+      });
       player = new App.Views.Player({
-        model: audio
+        model: audio,
+        duration: duration
       });
       return $(ob).append(player.render());
     });
   };
 
   App.Views.Player = Backbone.View.extend({
-    initialize: function() {
+    initialize: function(options) {
       this.barLength = 30;
       this.model.parentView = this;
-      return this.model.bind('timeupdate', this.timeupdate);
+      this.model.bind('timeupdate', this.timeupdate);
+      this.model.bind('durationchange', this.durationchange);
+      if (options.duration) return this.manualDuration = options.duration;
     },
     timeupdate: function() {
-      console.log('timeupdate');
       this.parentView.$el.find('.seek-bar').html(this.parentView.makeSeekBar());
-      return this.parentView.$el.find('.time').html(buzz.toTimer(this.getTime()));
+      this.parentView.$el.find('.time').html(buzz.toTimer(this.getTime()));
+      if (this.parentView.duration && this.getTime() > this.parentView.duration) {
+        this.parentView.pause();
+        return this.setTime(0);
+      }
+    },
+    durationchange: function() {
+      this.parentView.duration = this.getDuration();
+      if (this.parentView.manualDuration) {
+        return this.parentView.duration = this.parentView.manualDuration;
+      }
     },
     events: {
       "click .play-button": "play",
@@ -45,7 +61,7 @@
     className: "player-js",
     makeSeekBar: function() {
       var i, out, position, _ref;
-      position = Math.floor(this.barLength * this.model.getPercent() / 100);
+      position = Math.floor(this.barLength * this.model.getTime() / this.duration);
       out = "";
       for (i = 0, _ref = this.barLength; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
         if (i <= position) {
@@ -57,9 +73,7 @@
       return out;
     },
     render: function() {
-      this.$el.html(_.template(this.template, {
-        homePage: "https://github.com/lpenguin/mnplayer-js"
-      }));
+      this.$el.html(this.template);
       this.$el.find('.seek-bar').html(this.makeSeekBar());
       this.$el.find('.time').html(buzz.toTimer(this.model.getTime()));
       return this.$el;
@@ -80,7 +94,7 @@
       var width, x;
       x = e.pageX - e.target.offsetLeft;
       width = $(e.target).width();
-      return this.model.setPercent(x / width * 100);
+      return this.model.setTime(x / width * this.duration);
     },
     homePage: function() {
       return window.open('https://github.com/lpenguin/mnplayer-js', '_newtab');
