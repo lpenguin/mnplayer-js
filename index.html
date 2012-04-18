@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Пример страницы</title>
+    <script src="js/jquery.js"></script>
+    <script src="js/underscore.js"></script>
+    <script src="js/backbone.js"></script>
+
+    <script src="js/json2.js"></script>
+    <script src="js/buzz.js"></script>
+    <script src="js/mnplayer.js"></script>
+    <link rel="stylesheet" href="css/mnplayer.css">
+    <style>
+        body{
+                font-family: monospace;
+            font-size: 15px;
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+            mnplayer();        
+        });
+
+    </script>
+  </head>
+<body>
+    <div id="player" url="audio/song.mp3" class="mnplayer"></div>
+</body>
+</html>
