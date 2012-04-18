@@ -1,0 +1,8 @@
+Minimalistic HTML5 player in pseudographic style.
+
+Dependencies:
+
+Backbone
+Underscore
+Buzz
+jQuery
