@@ -10,6 +10,11 @@
     Templates: {}
   };
 
+  App.Settings = {
+    barLength: 28,
+    autoLoad: true
+  };
+
   App.Templates.Player = "<div class=\"play-button symbol\">|>&nbsp;</div>\n<div class=\"pause-button hidden symbol\">||&nbsp;</div>\n<div class=\"symbol\">[</div>\n<div class=\"seek-bar symbol\"></div>\n<div class=\"symbol\">&nbsp;</div>\n<div class=\"time symbol\"></div>\n<div class=\"symbol\">]</div>\n&nbsp;\n<div class=\"symbol home-page\">[?]</div><br/>";
 
   Root.mnplayer = function() {
@@ -31,7 +36,8 @@
 
   App.Views.Player = Backbone.View.extend({
     initialize: function(options) {
-      this.barLength = 30;
+      this.barLength = App.Settings.barLength;
+      if (options.barLength) this.barLength = options.barLength;
       this.model.parentView = this;
       this.model.bind('timeupdate', this.timeupdate);
       this.model.bind('durationchange', this.durationchange);
@@ -101,6 +107,10 @@
     homePage: function() {
       return window.open('https://github.com/lpenguin/mnplayer-js', '_newtab');
     }
+  });
+
+  $(function() {
+    if (App.Settings.autoLoad) return mnplayer();
   });
 
 }).call(this);

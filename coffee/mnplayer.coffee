@@ -5,6 +5,10 @@ Root.App =
     Routers: {}
     Templates: {}
 
+App.Settings = 
+    barLength: 28
+    autoLoad: true
+    
 App.Templates.Player = """
     <div class="play-button symbol">|>&nbsp;</div>
     <div class="pause-button hidden symbol">||&nbsp;</div>
@@ -28,7 +32,9 @@ Root.mnplayer = ( ) ->
     
 App.Views.Player = Backbone.View.extend
     initialize: (options) ->
-        @barLength = 30;
+        @barLength = App.Settings.barLength;
+        if options.barLength
+            @barLength = options.barLength
         @model.parentView = this
         @model.bind('timeupdate', @timeupdate)
         @model.bind 'durationchange', @durationchange
@@ -84,5 +90,5 @@ App.Views.Player = Backbone.View.extend
     homePage: () ->
         window.open('https://github.com/lpenguin/mnplayer-js','_newtab');
 
-
+$ () ->  mnplayer() if App.Settings.autoLoad
 
