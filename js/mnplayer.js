@@ -10,7 +10,7 @@
     Templates: {}
   };
 
-  App.Templates.Player = "<div class=\"play-button symbol\">&nbsp;|>&nbsp;</div>\n<div class=\"pause-button hidden symbol\">&nbsp;||&nbsp;</div>\n<div class=\"symbol\">[</div>\n<div class=\"seek-bar symbol\"></div>\n<div class=\"symbol\">&nbsp;</div>\n<div class=\"time symbol\"></div>\n<div class=\"symbol\">]</div>";
+  App.Templates.Player = "<div class=\"play-button symbol\">|>&nbsp;</div>\n<div class=\"pause-button hidden symbol\">||&nbsp;</div>\n<div class=\"symbol\">[</div>\n<div class=\"seek-bar symbol\"></div>\n<div class=\"symbol\">&nbsp;</div>\n<div class=\"time symbol\"></div>\n<div class=\"symbol\">]</div>";
 
   Root.mnplayer = function() {
     return $('.mnplayer').each(function(i, ob) {
