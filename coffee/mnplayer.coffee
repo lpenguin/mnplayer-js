@@ -146,10 +146,11 @@ App.Views.Player = Backbone.View.extend
     template: App.Templates.Player
     className: "player-js"
     makeSeekBar: () ->
-        position = Math.floor @barLength * @model.getTime() / @duration
+        position = Math.floor @barLength * @model.getTime() / @duration + 1
+        console.log position + '/' + @barLength
         out = ""
-        for i in [0..@barLength]
-            if i < position
+        for i in [1..@barLength]
+            if i <= position and position != 1
                 out += '='
             else
                 out += '-'
@@ -160,9 +161,9 @@ App.Views.Player = Backbone.View.extend
         m = minit = (@message or '') + Array(space+1).join(' ')
 
         if m.length > @barLength
-            m = m.substring @messagePosition, @barLength + @messagePosition + 1
+            m = m.substring @messagePosition, @barLength + @messagePosition
 
-        rest = @barLength - m.length + 1
+        rest = @barLength - m.length 
         
         if minit.length > @barLength
             left = minit.substring(0, rest)

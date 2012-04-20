@@ -157,10 +157,11 @@
     className: "player-js",
     makeSeekBar: function() {
       var i, out, position, _ref;
-      position = Math.floor(this.barLength * this.model.getTime() / this.duration);
+      position = Math.floor(this.barLength * this.model.getTime() / this.duration + 1);
+      console.log(position + '/' + this.barLength);
       out = "";
-      for (i = 0, _ref = this.barLength; 0 <= _ref ? i <= _ref : i >= _ref; 0 <= _ref ? i++ : i--) {
-        if (i < position) {
+      for (i = 1, _ref = this.barLength; 1 <= _ref ? i <= _ref : i >= _ref; 1 <= _ref ? i++ : i--) {
+        if (i <= position && position !== 1) {
           out += '=';
         } else {
           out += '-';
@@ -173,9 +174,9 @@
       space = App.Settings.messageSpace;
       m = minit = (this.message || '') + Array(space + 1).join(' ');
       if (m.length > this.barLength) {
-        m = m.substring(this.messagePosition, this.barLength + this.messagePosition + 1);
+        m = m.substring(this.messagePosition, this.barLength + this.messagePosition);
       }
-      rest = this.barLength - m.length + 1;
+      rest = this.barLength - m.length;
       if (minit.length > this.barLength) {
         left = minit.substring(0, rest);
       } else {
