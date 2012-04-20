@@ -20,24 +20,27 @@
   App.Templates.Player = "<div class=\"play-button symbol clickable\">|>&nbsp;</div>\n<div class=\"pause-button hidden symbol clickable\">||&nbsp;</div>\n<div class=\"symbol\">[</div>\n<div class=\"seek-bar symbol clickable\"></div>\n<div class=\"symbol\">&nbsp;</div>\n<div class=\"time symbol\"></div>\n<div class=\"symbol\">]</div>\n&nbsp;\n<div class=\"symbol info clickable\">[i]</div>\n<div class=\"symbol home-page clickable\">[?]</div><br/>";
 
   Root.mnplayer = function() {
-    var message;
-    if (!buzz.isSupported()) {
-      message = 'sorry HTML5 is not supported by your browser';
-    }
     return $('.mnplayer').each(function(i, ob) {
-      var audio, duration, info, mp3url, oggurl, player, url;
+      var audio, duration, info, message, mp3url, oggurl, player, url;
+      message = "";
       url = $(ob).attr('url');
       mp3url = $(ob).attr('mp3url');
       oggurl = $(ob).attr('oggurl');
+      if (!buzz.isSupported()) {
+        message = 'sorry HTML5 is not supported by your browser';
+      }
       if (mp3url && buzz.isMP3Supported()) url = mp3url;
       if (oggurl && buzz.isOGGSupported()) url = oggurl;
-      if (!url) message = 'sorry, no audio';
-      duration = $(ob).attr('duration');
-      info = $(ob).attr('info');
+      if (!url) {
+        message = 'error: no audio';
+        url = '';
+      }
       audio = new buzz.sound(url, {
         preload: true,
         loop: false
       });
+      duration = $(ob).attr('duration');
+      info = $(ob).attr('info');
       player = new App.Views.Player({
         model: audio,
         duration: duration,
@@ -115,7 +118,7 @@
     },
     showMessage: function(message) {
       this.message = message;
-      this.setMessageMode();
+      if (this.showMode !== 'message') this.setMessageMode();
       return this.drawMessage();
     },
     soundAbort: function(e) {

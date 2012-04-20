@@ -25,24 +25,29 @@ App.Templates.Player = """
 """
 
 Root.mnplayer = ( ) ->
-    message = 'sorry HTML5 is not supported by your browser' if not buzz.isSupported()
+    
     $('.mnplayer').each (i, ob) ->
-            
+        message = ""
         url = $(ob).attr 'url'
         mp3url = $(ob).attr 'mp3url'
         oggurl = $(ob).attr 'oggurl'
+        message = 'sorry HTML5 is not supported by your browser' if not buzz.isSupported()
         
         if mp3url and buzz.isMP3Supported()
             url = mp3url
-        
         if oggurl and buzz.isOGGSupported()
             url = oggurl
         if not url 
-            message = 'sorry, no audio'
+            message = 'error: no audio'
+            url = ''
+#            audio = {}
+ #       else
+        audio = new buzz.sound url, { preload:true, loop:false}
+            
         duration = $(ob).attr 'duration'
         info = $(ob).attr 'info'
         
-        audio = new buzz.sound url, { preload:true, loop:false}
+        
 
         player = new App.Views.Player model: audio, duration: duration, info: info, message: message
         $(ob).append player.render()
@@ -108,7 +113,7 @@ App.Views.Player = Backbone.View.extend
     
     showMessage: (message) ->
         @message = message
-        @setMessageMode()
+        @setMessageMode() if @showMode != 'message'
         @drawMessage()
     
     soundAbort: (e) ->
@@ -127,6 +132,7 @@ App.Views.Player = Backbone.View.extend
                 when 4 
                     msg += ': audio is not supported by your browser'
         else if e.target instanceof HTMLSourceElement
+            #TODO::HACK
             msg += ': audio is not supported by your browser'
                     
         @showMessage msg
