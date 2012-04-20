@@ -9,13 +9,8 @@
     margin:0px;
 }
 
-.play-button:hover,.pause-button:hover,.home-page:hover{
+.clickable:hover{
     font-weight: bold;
     cursor: pointer;
-}
-
-.seek-bar:hover{
-    cursor: pointer;
-    font-weight: bold;
 }
 
