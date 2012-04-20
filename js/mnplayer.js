@@ -1,5 +1,5 @@
 (function() {
-  var Root;
+  var Root, buzzBind;
 
   Root = window;
 
@@ -34,30 +34,35 @@
     });
   };
 
+  buzzBind = function(sound, event, func, obj) {
+    var f;
+    f = function() {
+      return func.call(obj, this);
+    };
+    return sound.bind(event, f);
+  };
+
   App.Views.Player = Backbone.View.extend({
     initialize: function(options) {
       this.barLength = App.Settings.barLength;
       if (options.barLength) this.barLength = options.barLength;
-      this.model.parentView = this;
-      this.model.bind('timeupdate', this.timeupdate);
-      this.model.bind('durationchange', this.durationchange);
+      buzzBind(this.model, 'timeupdate', this.timeupdate, this);
+      buzzBind(this.model, 'durationchange', this.durationchange, this);
       if (options.duration) {
         return this.manualDuration = buzz.fromTimer(options.duration);
       }
     },
-    timeupdate: function() {
-      this.parentView.$el.find('.seek-bar').html(this.parentView.makeSeekBar());
-      this.parentView.$el.find('.time').html(buzz.toTimer(this.getTime()));
-      if (this.parentView.duration && this.getTime() > this.parentView.duration) {
-        this.parentView.pause();
-        return this.setTime(0);
+    timeupdate: function(sound) {
+      this.$el.find('.seek-bar').html(this.makeSeekBar());
+      this.$el.find('.time').html(buzz.toTimer(this.model.getTime()));
+      if (this.duration && this.model.getTime() > this.duration) {
+        this.pause();
+        return this.model.setTime(0);
       }
     },
-    durationchange: function() {
-      this.parentView.duration = this.getDuration();
-      if (this.parentView.manualDuration) {
-        return this.parentView.duration = this.parentView.manualDuration;
-      }
+    durationchange: function(sound) {
+      this.duration = this.model.getDuration();
+      if (this.manualDuration) return this.duration = this.manualDuration;
     },
     events: {
       "click .play-button": "play",

@@ -30,28 +30,37 @@ Root.mnplayer = ( ) ->
         player = new App.Views.Player model: audio, duration: duration 
         $(ob).append player.render()
     
+buzzBind = (sound, event, func, obj) ->
+    f = () ->
+        func.call obj, this
+    sound.bind event, f
+    
 App.Views.Player = Backbone.View.extend
     initialize: (options) ->
         @barLength = App.Settings.barLength;
         if options.barLength
             @barLength = options.barLength
-        @model.parentView = this
-        @model.bind('timeupdate', @timeupdate)
-        @model.bind 'durationchange', @durationchange
+        buzzBind @model, 'timeupdate', @timeupdate, this
+        buzzBind @model, 'durationchange', @durationchange, this
+        
+        #@model.parentView = this
+        
+        #@model.bind('timeupdate', @timeupdate)
+        #@model.bind 'durationchange', @durationchange
         if options.duration
             @manualDuration = buzz.fromTimer options.duration
-
-#        _.bind @timeupdate, this
-    timeupdate: () ->
-        @parentView.$el.find('.seek-bar').html @parentView.makeSeekBar()
-        @parentView.$el.find('.time').html buzz.toTimer @getTime()
-        if @parentView.duration and @getTime() > @parentView.duration
-            @parentView.pause()
-            @setTime(0)
-    durationchange: () ->
-        @parentView.duration = @getDuration()
-        if @parentView.manualDuration
-            @parentView.duration = @parentView.manualDuration
+            
+    timeupdate: (sound) ->
+        @$el.find('.seek-bar').html @makeSeekBar()
+        @$el.find('.time').html buzz.toTimer @model.getTime()
+        if @duration and @model.getTime() > @duration
+            @pause()
+            @model.setTime(0)
+            
+    durationchange: (sound) ->
+        @duration = @model.getDuration()
+        if @manualDuration
+            @duration = @manualDuration
     events: 
         "click .play-button": "play"
         "click .pause-button": "pause"
