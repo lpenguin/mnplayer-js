@@ -256,7 +256,7 @@
 
   Root.soundManager.url = 'http://lpenguin.narod2.ru/swf/';
 
-  soundManager.preferFlash = true;
+  soundManager.preferFlash = false;
 
   Root.soundManager.onready(function() {
     if (App.Settings.autoLoad) return mnplayer();
