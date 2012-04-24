@@ -10,6 +10,7 @@ App.Settings =
     autoLoad: true
     messageStep: 500
     messageSpace: 4
+    updateTime: 500
     
 App.Templates.Player = """
     <div class="play-button symbol clickable">|>&nbsp;</div>
@@ -25,25 +26,13 @@ App.Templates.Player = """
 """
 
 Root.mnplayer = ( ) ->
-    
     $('.mnplayer').each (i, ob) ->
         message = ""
         url = $(ob).attr 'url'
-        mp3url = $(ob).attr 'mp3url'
-        oggurl = $(ob).attr 'oggurl'
-        message = 'sorry HTML5 is not supported by your browser' if not buzz.isSupported()
-        
-        if mp3url and buzz.isMP3Supported()
-            url = mp3url
-        if oggurl and buzz.isOGGSupported()
-            url = oggurl
-        if not url 
-            message = 'error: no audio'
-            url = ''
-#            audio = {}
- #       else
-        audio = new buzz.sound url, { preload:true, loop:false}
+
+        #audio = new buzz.sound url, { preload:true, loop:false}
             
+        audio = soundManager.createSound id:'sound'+i, url: url, autoLoad: true
         duration = $(ob).attr 'duration'
         info = $(ob).attr 'info'
         
@@ -52,25 +41,53 @@ Root.mnplayer = ( ) ->
         player = new App.Views.Player model: audio, duration: duration, info: info, message: message
         $(ob).append player.render()
     
-buzzBind = (sound, event, func, obj) ->
+eventBind = (sound, event, func, obj) ->
     f = (e) ->
         func.call obj, e, this
     sound.bind event, f
 replaceAll = (string, search, replace) ->
     string.split(search).join(replace)
 
+fromTimer = (time) ->
+    vals = time.split(":")
+    minutes = vals[0]
+    seconds = vals[1]
+    return (parseInt minutes * 60 + parseInt seconds) * 1000
+    
+toTimer = (ms) ->
+    ms = Math.floor ms / 1000
+    seconds = ms % 60
+    minutes = Math.floor ms / 60
+    seconds = '0' + seconds if seconds < 10
+    minutes = '0' + minutes if minutes < 10
+    return minutes+":"+seconds
 
+startTimer = (func, delay, scope) ->
+    id = setInterval( () -> 
+        func.call scope
+    , delay)
+    return id
+
+stopTimer = (id) ->
+    clearInterval id
+    
 App.Views.Player = Backbone.View.extend
     initialize: (options) ->
         @barLength = App.Settings.barLength;
         if options.barLength
             @barLength = options.barLength
-        buzzBind @model, 'timeupdate', @timeupdate, this
-        buzzBind @model, 'durationchange', @durationchange, this
-        #buzzBind @model, 'abort', @soundAbort, this
-        buzzBind @model, 'error', @soundError, this
+        #eventBind @model, 'timeupdate', @timeupdate, this
+        #eventBind @model, 'durationchange', @durationchange, this
+        ##buzzBind @model, 'abort', @soundAbort, this
+        #eventBind @model, 'error', @soundError, this
+        
+        @audio = @model
+        @duration = @audio.duration
+        #soundManager.whileplaying @timeupdate, this
+        @audio._whileloading @durationchange, this
+        
         if options.duration
-            @manualDuration = buzz.fromTimer options.duration
+            @manualDuration = fromTimer options.duration
         @info = options.info or ''
         @showMode = 'bar'
         @messagePosition = 0
@@ -91,10 +108,10 @@ App.Views.Player = Backbone.View.extend
         
     drawSeekBar: () ->
         @$el.find('.seek-bar').html @makeSeekBar()
-        @$el.find('.time').html buzz.toTimer @model.getTime()
+        @$el.find('.time').html toTimer @model.position
     drawMessage: () ->
         @$el.find('.seek-bar').html @makeMessageBar()
-        @$el.find('.time').html buzz.toTimer @model.getTime()
+        @$el.find('.time').html toTimer @model.position
     
     timeupdate: (e) ->
         if @showMode == 'bar'
@@ -102,12 +119,15 @@ App.Views.Player = Backbone.View.extend
         if @showMode == 'message'
             @drawMessage()
             
-        if @duration and @model.getTime() > @duration
+        if @duration and @model.duration > @duration
             @pause()
-            @model.setTime(0)
-            
+            @model.setPosition(0)
+    
+    getDuration: ()->
+        return @manualDuration if @manualDuration
+        return @audio.duration
     durationchange: (e) ->
-        @duration = @model.getDuration()
+        @duration = @model.duration
         if @manualDuration
             @duration = @manualDuration
     
@@ -146,7 +166,7 @@ App.Views.Player = Backbone.View.extend
     template: App.Templates.Player
     className: "player-js"
     makeSeekBar: () ->
-        position = Math.floor @barLength * @model.getTime() / @duration + 1
+        position = Math.floor @barLength * @model.position / @getDuration() + 1
         console.log position + '/' + @barLength
         out = ""
         for i in [1..@barLength]
@@ -180,12 +200,14 @@ App.Views.Player = Backbone.View.extend
     render: () ->
         @$el.html @template
         @$el.find('.seek-bar').html @makeSeekBar()
-        @$el.find('.time').html buzz.toTimer @model.getTime()
+        @$el.find('.time').html toTimer @model.position
         return @$el
     play: () ->
+        @timeupdateTimer = startTimer @timeupdate, App.Settings.updateTime, this
         @model.play()
         @togglePlayButton()
     pause: () ->
+        stopTimer @timeupdateTimer
         @model.pause()
         @togglePlayButton()
     togglePlayButton: () ->
@@ -196,11 +218,16 @@ App.Views.Player = Backbone.View.extend
             @setBarMode()
             @drawSeekBar()
             return
-        x = e.pageX - e.target.offsetLeft;
+        x = e.pageX - e.target.offsetLeft ;
         width = $(e.target).width()
-        @model.setTime x/width * @duration
+        @model.setPosition x/width * @getDuration()
+        @timeupdate()
     homePage: () ->
         window.open('https://github.com/lpenguin/mnplayer-js','_newtab');
 
-$ () ->  mnplayer() if App.Settings.autoLoad
+Root.soundManager.url = 'swf/'
+Root.soundManager.flashVersion = 9 #optional: shiny features (default = 8)
+soundManager.preferFlash = true; 
+Root.soundManager.onready () ->  mnplayer() if App.Settings.autoLoad
+#$ () ->  mnplayer() if App.Settings.autoLoad
 

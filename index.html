@@ -9,6 +9,24 @@
 
     <script src="js/json2.js"></script>
     <script src="js/buzz.js"></script>
+
+    <script src="js/soundmanager2.js"></script>
+
+    <script>
+        soundManager.url = 'swf/';
+        //soundManager.flashVersion = 9; // optional: shiny features (default = 8)
+        //soundManager.useHTML5Audio = true;
+        //soundManager.preferFlash = false;
+        /*
+        * read up on HTML5 audio support, if you're feeling adventurous.
+        * iPad/iPhone and devices without flash installed will always attempt to use it.
+        */
+        //soundManager.onready(function() {
+        // Ready to use; soundManager.createSound() etc. can now be called.
+        //    mnplayer();
+        //});
+    </script>
+
     <script src="js/mnplayer.js"></script>
     <link rel="stylesheet" href="css/mnplayer.css">
     <style>
@@ -21,12 +39,12 @@
   </head>
 <body>    
 <div id="player" 
-     mp3url="http://content.wuala.com/contents/lilacpenguin/Music/Upload/lilac%20penguin%20sms.mp3?dl=1" 
+     url="http://content.wuala.com/contents/lilacpenguin/Music/Upload/lilac%20penguin%20sms.mp3?dl=1" 
      class="mnplayer" 
      duration="05:50"
      info="lilacpenguin - summer / mornig / sun"></div>
      
-<div id="player2" class="mnplayer" info="song" url="audio/song.ogg"></div>
+<div id="player2" class="mnplayer" info="NRKTK - молись андрей" url="audio/song.mp3"></div>
 <!--url="audio/song.mp3">-->
 </body>
 </html>

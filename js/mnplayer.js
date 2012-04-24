@@ -1,5 +1,5 @@
 (function() {
-  var Root, buzzBind, replaceAll;
+  var Root, eventBind, fromTimer, replaceAll, startTimer, stopTimer, toTimer;
 
   Root = window;
 
@@ -14,30 +14,21 @@
     barLength: 28,
     autoLoad: true,
     messageStep: 500,
-    messageSpace: 4
+    messageSpace: 4,
+    updateTime: 500
   };
 
   App.Templates.Player = "<div class=\"play-button symbol clickable\">|>&nbsp;</div>\n<div class=\"pause-button hidden symbol clickable\">||&nbsp;</div>\n<div class=\"symbol\">[</div>\n<div class=\"seek-bar symbol clickable\"></div>\n<div class=\"symbol\">&nbsp;</div>\n<div class=\"time symbol\"></div>\n<div class=\"symbol\">]</div>\n&nbsp;\n<div class=\"symbol info clickable\">[i]</div>\n<div class=\"symbol home-page clickable\">[?]</div><br/>";
 
   Root.mnplayer = function() {
     return $('.mnplayer').each(function(i, ob) {
-      var audio, duration, info, message, mp3url, oggurl, player, url;
+      var audio, duration, info, message, player, url;
       message = "";
       url = $(ob).attr('url');
-      mp3url = $(ob).attr('mp3url');
-      oggurl = $(ob).attr('oggurl');
-      if (!buzz.isSupported()) {
-        message = 'sorry HTML5 is not supported by your browser';
-      }
-      if (mp3url && buzz.isMP3Supported()) url = mp3url;
-      if (oggurl && buzz.isOGGSupported()) url = oggurl;
-      if (!url) {
-        message = 'error: no audio';
-        url = '';
-      }
-      audio = new buzz.sound(url, {
-        preload: true,
-        loop: false
+      audio = soundManager.createSound({
+        id: 'sound' + i,
+        url: url,
+        autoLoad: true
       });
       duration = $(ob).attr('duration');
       info = $(ob).attr('info');
@@ -51,7 +42,7 @@
     });
   };
 
-  buzzBind = function(sound, event, func, obj) {
+  eventBind = function(sound, event, func, obj) {
     var f;
     f = function(e) {
       return func.call(obj, e, this);
@@ -63,14 +54,44 @@
     return string.split(search).join(replace);
   };
 
+  fromTimer = function(time) {
+    var minutes, seconds, vals;
+    vals = time.split(":");
+    minutes = vals[0];
+    seconds = vals[1];
+    return (parseInt(minutes * 60 + parseInt(seconds))) * 1000;
+  };
+
+  toTimer = function(ms) {
+    var minutes, seconds;
+    ms = Math.floor(ms / 1000);
+    seconds = ms % 60;
+    minutes = Math.floor(ms / 60);
+    if (seconds < 10) seconds = '0' + seconds;
+    if (minutes < 10) minutes = '0' + minutes;
+    return minutes + ":" + seconds;
+  };
+
+  startTimer = function(func, delay, scope) {
+    var id;
+    id = setInterval(function() {
+      return func.call(scope);
+    }, delay);
+    return id;
+  };
+
+  stopTimer = function(id) {
+    return clearInterval(id);
+  };
+
   App.Views.Player = Backbone.View.extend({
     initialize: function(options) {
       this.barLength = App.Settings.barLength;
       if (options.barLength) this.barLength = options.barLength;
-      buzzBind(this.model, 'timeupdate', this.timeupdate, this);
-      buzzBind(this.model, 'durationchange', this.durationchange, this);
-      buzzBind(this.model, 'error', this.soundError, this);
-      if (options.duration) this.manualDuration = buzz.fromTimer(options.duration);
+      this.audio = this.model;
+      this.duration = this.audio.duration;
+      this.audio._whileloading(this.durationchange, this);
+      if (options.duration) this.manualDuration = fromTimer(options.duration);
       this.info = options.info || '';
       this.showMode = 'bar';
       this.messagePosition = 0;
@@ -98,22 +119,26 @@
     },
     drawSeekBar: function() {
       this.$el.find('.seek-bar').html(this.makeSeekBar());
-      return this.$el.find('.time').html(buzz.toTimer(this.model.getTime()));
+      return this.$el.find('.time').html(toTimer(this.model.position));
     },
     drawMessage: function() {
       this.$el.find('.seek-bar').html(this.makeMessageBar());
-      return this.$el.find('.time').html(buzz.toTimer(this.model.getTime()));
+      return this.$el.find('.time').html(toTimer(this.model.position));
     },
     timeupdate: function(e) {
       if (this.showMode === 'bar') this.drawSeekBar();
       if (this.showMode === 'message') this.drawMessage();
-      if (this.duration && this.model.getTime() > this.duration) {
+      if (this.duration && this.model.duration > this.duration) {
         this.pause();
-        return this.model.setTime(0);
+        return this.model.setPosition(0);
       }
     },
+    getDuration: function() {
+      if (this.manualDuration) return this.manualDuration;
+      return this.audio.duration;
+    },
     durationchange: function(e) {
-      this.duration = this.model.getDuration();
+      this.duration = this.model.duration;
       if (this.manualDuration) return this.duration = this.manualDuration;
     },
     showMessage: function(message) {
@@ -157,7 +182,7 @@
     className: "player-js",
     makeSeekBar: function() {
       var i, out, position, _ref;
-      position = Math.floor(this.barLength * this.model.getTime() / this.duration + 1);
+      position = Math.floor(this.barLength * this.model.position / this.getDuration() + 1);
       console.log(position + '/' + this.barLength);
       out = "";
       for (i = 1, _ref = this.barLength; 1 <= _ref ? i <= _ref : i >= _ref; 1 <= _ref ? i++ : i--) {
@@ -195,14 +220,16 @@
     render: function() {
       this.$el.html(this.template);
       this.$el.find('.seek-bar').html(this.makeSeekBar());
-      this.$el.find('.time').html(buzz.toTimer(this.model.getTime()));
+      this.$el.find('.time').html(toTimer(this.model.position));
       return this.$el;
     },
     play: function() {
+      this.timeupdateTimer = startTimer(this.timeupdate, App.Settings.updateTime, this);
       this.model.play();
       return this.togglePlayButton();
     },
     pause: function() {
+      stopTimer(this.timeupdateTimer);
       this.model.pause();
       return this.togglePlayButton();
     },
@@ -219,14 +246,21 @@
       }
       x = e.pageX - e.target.offsetLeft;
       width = $(e.target).width();
-      return this.model.setTime(x / width * this.duration);
+      this.model.setPosition(x / width * this.getDuration());
+      return this.timeupdate();
     },
     homePage: function() {
       return window.open('https://github.com/lpenguin/mnplayer-js', '_newtab');
     }
   });
 
-  $(function() {
+  Root.soundManager.url = 'swf/';
+
+  Root.soundManager.flashVersion = 9;
+
+  soundManager.preferFlash = true;
+
+  Root.soundManager.onready(function() {
     if (App.Settings.autoLoad) return mnplayer();
   });
 
