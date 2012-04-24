@@ -225,8 +225,8 @@ App.Views.Player = Backbone.View.extend
     homePage: () ->
         window.open('https://github.com/lpenguin/mnplayer-js','_newtab');
 
-Root.soundManager.url = 'swf/'
 Root.soundManager.flashVersion = 9 #optional: shiny features (default = 8)
+Root.soundManager.url = 'http://lpenguin.narod2.ru/swf/'
 soundManager.preferFlash = true; 
 Root.soundManager.onready () ->  mnplayer() if App.Settings.autoLoad
 #$ () ->  mnplayer() if App.Settings.autoLoad
