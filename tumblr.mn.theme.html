@@ -14,6 +14,10 @@
             a{
                 font-weight:bold;
                 color:black;
+                text-decoration: none;
+            }
+            a:hover{
+                text-decoration:underline;
             }
             #posts {
                 margin-top: -35px;
@@ -29,7 +33,14 @@
     padding: 0px;
     margin:0px;
 }
+.mncontent{
+    margin-left:206px;
+}
 
+.tmtime { 
+    width: 206px;
+    float: left;
+}
 .clickable:hover{
     font-weight: bold;
     cursor: pointer;
@@ -42,7 +53,7 @@
         {/block:Description}
     </head>
     <body>
-        <h1><a href="/">{Title}</a></h1>
+         <div class="mncontent"><h1><a href="/">{Title}</a></h1></div>
 
         {block:Description}
             <!--<p id="description">{Description}</p>-->
@@ -54,41 +65,44 @@
                     <p class="post text">
                         
                         {block:Title}
-                            <a href="{Permalink}" class="permalinc">{DayOfMonth}-{ShortMonth}-{Year} {24Hour}:{Minutes}:{Seconds}</a><br/>
-                        ============================================<br/>
-                        <b>{Title}</b>
+                            <div class="tmtime">
+                            <a href="{Permalink}" class="permalinc">
+                            {DayOfMonthWithZero} {ShortMonth} {Year} {24HourWithZero}:{Minutes}:{Seconds}</a>::</div>
+                        {Title}
                         {/block:Title}
 
-                        {Body}
+                        <div class="mncontent">{Body}</div>
                     </p>
                 {/block:Text}
 
                 {block:Photo}
                     <p class="post photo">
-                        <a href="{Permalink}" class="permalinc">{DayOfMonth}-{ShortMonth}-{Year} {24Hour}:{Minutes}:{Seconds}</a> <br/>
-                        ============================================<br/>
+                        <div class="tmtime">
+                        <a href="{Permalink}" class="permalinc">{DayOfMonthWithZero} {ShortMonth} {Year} {24HourWithZero}:{Minutes}:{Seconds}</a>::</div>
+                        {Caption}<br/>
                         {block:Caption}
-                            <div class="caption">{Caption}</div>
+                            
                         {/block:Caption}
+                        <div class="mncontent">
                         <img src="{PhotoURL-500}" alt="{PhotoAlt}"/>
+                        </div>
                     </p>
                 {/block:Photo}
 
                 {block:Photoset}
                     <p class="post photoset">
-                        <a href="{Permalink}" class="permalinc">{DayOfMonth}-{ShortMonth}-{Year} {24Hour}:{Minutes}:{Seconds}</a> <br/>
-                        ============================================<br/>
-                        {block:Caption}
-                            <div class="caption">{Caption}</div>
-                        {/block:Caption}
-                        {Photoset-500}
+                    <div class="tmtime">
+                        <a href="{Permalink}" class="permalinc">{DayOfMonthWithZero} {ShortMonth} {Year} {24HourWithZero}:{Minutes}:{Seconds}</a>::</div>{Caption}
+                        
+                        {block:Caption}{/block:Caption}
+                        <div class="mncontent">
+                         {Photoset-500}</div>
                     </p>
                 {/block:Photoset}
 
                 {block:Quote}
                     <p class="post quote">
-                        <a href="{Permalink}" class="permalinc">{DayOfMonth}-{ShortMonth}-{Year} {24Hour}:{Minutes}:{Seconds}</a> <br/>
-                        ============================================<br/>
+                        <a href="{Permalink}" class="permalinc">{DayOfMonthWithZero} {ShortMonth} {Year} {24HourWithZero}:{Minutes}:{Seconds}</a> <br/>
                         "{Quote}"
 
                         {block:Source}
@@ -99,8 +113,7 @@
 
                 {block:Link}
                     <p class="post link">
-                        <a href="{Permalink}" class="permalinc">{DayOfMonth}-{ShortMonth}-{Year} {24Hour}:{Minutes}:{Seconds}</a> <br/>
-                        ============================================<br/>
+                        <a href="{Permalink}" class="permalinc">{DayOfMonthWithZero} {ShortMonth} {Year} {24HourWithZero}:{Minutes}:{Seconds}</a> <br/> <br />
                         <a href="{URL}" class="link" {Target}>{Name}</a>
 
                         {block:Description}
@@ -113,7 +126,7 @@
                     <p class="post chat">
                         
                         {block:Title}
-                        <a href="{Permalink}" class="permalinc">{DayOfMonth}-{ShortMonth}-{Year} {24Hour}:{Minutes}:{Seconds}</a> <br/>
+                        <a href="{Permalink}" class="permalinc">{DayOfMonthWithZero} {ShortMonth} {Year} {24HourWithZero}:{Minutes}:{Seconds}</a> <br/>
                         ============================================<br/>
                         {/block:Title}
 
@@ -133,24 +146,26 @@
 
                 {block:Video}
                     <p class="post video">
-                                            <a href="{Permalink}" class="permalinc">{DayOfMonth}-{ShortMonth}-{Year} {24Hour}:{Minutes}:{Seconds}</a> <br/>
-                        ============================================<br/>
-                        {Video-500}
+                                           <div class="tmtime"> <a href="{Permalink}" class="permalinc">{DayOfMonthWithZero} {ShortMonth} {Year} {24HourWithZero}:{Minutes}:{Seconds}</a>:: </div>                         {Caption}
+                        
+                        <div class="mncontent">
 
+                        {Video-500}
+                        </div>
                         {block:Caption}
-                            <div class="caption">{Caption}</div>
+                            
                         {/block:Caption}
                     </p>
                 {/block:Video}
 
                 {block:Audio}
                     <p class="post audio">
-                                            <a href="{Permalink}" class="permalinc">{DayOfMonth}-{ShortMonth}-{Year} {24Hour}:{Minutes}:{Seconds}</a> <br/>
-                        ============================================<br/>
+             <div class="tmtime">                               <a href="{Permalink}" class="permalinc">{DayOfMonthWithZero} {ShortMonth} {Year} {24HourWithZero}:{Minutes}:{Seconds}</a> :: </div>{Caption}
+                        <div class="mncontent">
                         {AudioPlayerBlack}
-
+                        </div>
                         {block:Caption}
-                            <div class="caption">{Caption}</div>
+                            <div class="caption"></div>
                         {/block:Caption}
                     </p>
                 {/block:Audio}
@@ -174,7 +189,9 @@
     <script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/backbone.js"></script>
 
     <script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/json2.js"></script>
-    <script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/buzz.js"></script>
+    <!--<script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/buzz.js"></script>-->
+     <script src="https://raw.github.com/lpenguin/mnplayer-js/master/j/soundmanager2.js"></script>
     <script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/mnplayer.js"></script>
+    
     </body>
 </html>

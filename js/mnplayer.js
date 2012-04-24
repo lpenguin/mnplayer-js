@@ -254,8 +254,6 @@
     }
   });
 
-  Root.soundManager.flashVersion = 9;
-
   Root.soundManager.url = 'http://lpenguin.narod2.ru/swf/';
 
   soundManager.preferFlash = true;
