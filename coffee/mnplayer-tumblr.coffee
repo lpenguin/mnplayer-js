@@ -17,7 +17,7 @@ class mnplayerTumblrPlugin
       div.addClass 'mnplayer'
       div.attr 'url', audio_src
       $(this).after div
-      #$(this).hide()
+      $(this).hide()
       
 window.soundManager.plugins.push new mnplayerTumblrPlugin()
       #http://assets.tumblr.com/swf/audio_player_black.swf?audio_file=http://www.tumblr.com/audio_file/18434471424/tumblr_m03rfvQ6GV1r1lmxt&color=FFFFFF

@@ -23,7 +23,8 @@
         div = $('<div></div>');
         div.addClass('mnplayer');
         div.attr('url', audio_src);
-        return $(this).after(div);
+        $(this).after(div);
+        return $(this).hide();
       });
     };
 

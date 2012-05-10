@@ -172,7 +172,7 @@ App.Views.Player = Backbone.View.extend
         console.log position + '/' + @barLength
         out = ""
         for i in [1..@barLength]
-            if i <= position and position != 1
+            if i <= position
                 out += '='
             else
                 out += '-'

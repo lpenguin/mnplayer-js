@@ -194,7 +194,7 @@
       console.log(position + '/' + this.barLength);
       out = "";
       for (i = 1, _ref = this.barLength; 1 <= _ref ? i <= _ref : i >= _ref; 1 <= _ref ? i++ : i--) {
-        if (i <= position && position !== 1) {
+        if (i <= position) {
           out += '=';
         } else {
           out += '-';
