@@ -99,7 +99,7 @@
       this.audio = this.model;
       this.duration = this.audio.duration;
       this.audio._whileloading(this.durationchange, this);
-      this.audio.onid3(onid3, this);
+      this.audio.onid3(this.onid3, this);
       if (options.duration) this.manualDuration = fromTimer(options.duration);
       this.info = options.info || '';
       this.showMode = 'bar';

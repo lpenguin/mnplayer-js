@@ -4,7 +4,7 @@
         <link rel="shortcut icon" href="{Favicon}" />
         <link rel="alternate" type="application/rss+xml" href="{RSS}" />
         <script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/jquery.js"></script>
-	    <script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/underscore.js"></script>
+        <script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/underscore.js"></script>
 	    <script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/backbone.js"></script>
 	    <script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/soundmanager2.js"></script>
 	    <script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/mnplayer.js"></script>
@@ -50,11 +50,14 @@
 }
 
 .mncontent{
-    margin-left:206px;
+    padding-left:208px;
 }
 
 .tmtime { 
-    width: 206px;
+/*    width: 208px;*/
+	position:relative;
+	left: -208px;
+	margin-right: -208px;
     float: left;
 }
 
@@ -87,9 +90,29 @@
 
         <div id="posts">
             {block:Posts}
+            
+                    {block:Audio}
+                    <p class="post audio">
+	                        <div class="mncontent">
+	                            <div class="tmtime">
+                            		<a href="{Permalink}" class="permalinc">
+                            			{DayOfMonthWithZero} {ShortMonth} {Year} {24HourWithZero}:{Minutes}:{Seconds}
+                            		</a>
+                            	::</div>
+	                        	{Caption}
+	                        	{AudioPlayerBlack}
+	                        </div>
+                        {block:Caption}
+                            <div class="caption"></div>
+                        {/block:Caption}
+                    </p>
+                {/block:Audio}
+            
+            
                 {block:Text}
+                
                     <p class="post text">
-                        
+                        <div class="mncontent">
                         {block:Title}
                             <div class="tmtime">
                             <a href="{Permalink}" class="permalinc">
@@ -97,32 +120,35 @@
                         {Title}
                         {/block:Title}
 
-                        <div class="mncontent">{Body}</div>
+                        {Body}</div>
                     </p>
                 {/block:Text}
 
                 {block:Photo}
                     <p class="post photo">
-                        <div class="tmtime">
-                        <a href="{Permalink}" class="permalinc">{DayOfMonthWithZero} {ShortMonth} {Year} {24HourWithZero}:{Minutes}:{Seconds}</a>::</div>
-                        {Caption}<br/>
-                        {block:Caption}
-                            
-                        {/block:Caption}
-                        <div class="mncontent">
-                        <img src="{PhotoURL-500}" alt="{PhotoAlt}"/>
+                    	<div class="mncontent">
+	                        <div class="tmtime">
+	                        <a href="{Permalink}" class="permalinc">{DayOfMonthWithZero} {ShortMonth} {Year} {24HourWithZero}:{Minutes}:{Seconds}</a>::</div>
+	                        {Caption}<br/>
+	                        {block:Caption}
+	                            
+	                        {/block:Caption}
+	                        
+	                        <img src="{PhotoURL-500}" alt="{PhotoAlt}"/>
                         </div>
                     </p>
                 {/block:Photo}
 
                 {block:Photoset}
                     <p class="post photoset">
-                    <div class="tmtime">
-                        <a href="{Permalink}" class="permalinc">{DayOfMonthWithZero} {ShortMonth} {Year} {24HourWithZero}:{Minutes}:{Seconds}</a>::</div>{Caption}
-                        
-                        {block:Caption}{/block:Caption}
-                        <div class="mncontent">
-                         {Photoset-500}</div>
+                    	<div class="mncontent">
+	                    	<div class="tmtime">
+	                        <a href="{Permalink}" class="permalinc">{DayOfMonthWithZero} {ShortMonth} {Year} {24HourWithZero}:{Minutes}:{Seconds}</a>::</div>{Caption}
+	                        
+	                        {block:Caption}{/block:Caption}
+	                        
+	                         {Photoset-500}
+                         </div>
                     </p>
                 {/block:Photoset}
 
@@ -184,17 +210,7 @@
                     </p>
                 {/block:Video}
 
-                {block:Audio}
-                    <p class="post audio">
-             <div class="tmtime">                               <a href="{Permalink}" class="permalinc">{DayOfMonthWithZero} {ShortMonth} {Year} {24HourWithZero}:{Minutes}:{Seconds}</a> :: </div>{Caption}
-                        <div class="mncontent">
-                        {AudioPlayerBlack}
-                        </div>
-                        {block:Caption}
-                            <div class="caption"></div>
-                        {/block:Caption}
-                    </p>
-                {/block:Audio}
+
             {/block:Posts}
         </div>
 

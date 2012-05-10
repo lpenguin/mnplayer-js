@@ -87,7 +87,7 @@ App.Views.Player = Backbone.View.extend
         @duration = @audio.duration
         #soundManager.whileplaying @timeupdate, this
         @audio._whileloading @durationchange, this
-        @audio.onid3 onid3, this
+        @audio.onid3 @onid3, this
         
         if options.duration
             @manualDuration = fromTimer options.duration
