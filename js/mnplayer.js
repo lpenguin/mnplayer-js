@@ -101,7 +101,7 @@
       this.audio._whileloading(this.durationchange, this);
       this.audio._onid3(this.onid3, this);
       if (options.duration) this.manualDuration = fromTimer(options.duration);
-      this.info = options.info || this.getinfo;
+      this.info = options.info || this.getinfo();
       this.showMode = 'bar';
       this.messagePosition = 0;
       if (options.message) return this.showMessage(options.message);
