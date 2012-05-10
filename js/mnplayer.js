@@ -99,11 +99,17 @@
       this.audio = this.model;
       this.duration = this.audio.duration;
       this.audio._whileloading(this.durationchange, this);
+      this.audio.onid3(onid3, this);
       if (options.duration) this.manualDuration = fromTimer(options.duration);
       this.info = options.info || '';
       this.showMode = 'bar';
       this.messagePosition = 0;
       if (options.message) return this.showMessage(options.message);
+    },
+    onid3: function() {
+      if (!(this.info != null)) {
+        return this.info = this.audio.id3.artist + " - " + this.audio.id3.title;
+      }
     },
     setBarMode: function() {
       this.showMode = 'bar';

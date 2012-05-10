@@ -1,8 +1,6 @@
 (function() {
   var mnplayerTumblrPlugin;
 
-  if (!(window.soundManager.plugins != null)) window.soundManager.plugins = [];
-
   mnplayerTumblrPlugin = (function() {
 
     function mnplayerTumblrPlugin() {}
@@ -14,6 +12,7 @@
       str = this.tumblr_cheat_string;
       return $('.audio_player').each(function(i, el) {
         var audio_src, div, embed, re, res, src;
+        $(this).hide();
         embed = $(this).find('embed').first();
         src = embed.attr('src');
         re = /\?audio_file\=([^\&]+)\&/;
@@ -23,14 +22,15 @@
         div = $('<div></div>');
         div.addClass('mnplayer');
         div.attr('url', audio_src);
-        $(this).after(div);
-        return $(this).hide();
+        return $(this).after(div);
       });
     };
 
     return mnplayerTumblrPlugin;
 
   })();
+
+  if (!(window.soundManager.plugins != null)) window.soundManager.plugins = [];
 
   window.soundManager.plugins.push(new mnplayerTumblrPlugin());
 
