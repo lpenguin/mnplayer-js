@@ -1,8 +1,18 @@
 <html>
     <head>
         <title>{Title}</title>
-        <pnk rel="shortcut icon" href="{Favicon}">
-        <pnk rel="alternate" type="application/rss+xml" href="{RSS}">
+        <link rel="shortcut icon" href="{Favicon}" />
+        <link rel="alternate" type="application/rss+xml" href="{RSS}" />
+        <script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/jquery.js"></script>
+	    <script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/underscore.js"></script>
+	    <script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/backbone.js"></script>
+	    <script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/soundmanager2.js"></script>
+	    <script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/mnplayer.js"></script>
+	    <link rel="stylesheet" href="https://raw.github.com/lpenguin/mnplayer-js/master/css/mnplayer.css">
+	    <script>
+	        soundManager.url = 'http://static.tumblr.com/xaucqxv/Plwm3ju8a/';
+	    </script>
+    
         <style>
             body{
                     font-family: monospace;
@@ -22,7 +32,6 @@
             #posts {
                 margin-top: -35px;
             }
-
 .hidden {
     display: none
 }
@@ -33,6 +42,12 @@
     padding: 0px;
     margin:0px;
 }
+
+.clickable:hover{
+    font-weight: bold;
+    cursor: pointer;
+}
+
 .mncontent{
     margin-left:206px;
 }
@@ -41,10 +56,20 @@
     width: 206px;
     float: left;
 }
+
+/*.hidden {
+    display: none
+}
+.symbol {
+    float: left;
+    padding: 0px;
+    margin:0px;
+}
+
 .clickable:hover{
     font-weight: bold;
     cursor: pointer;
-}
+}*/
 
 
         </style>
@@ -183,15 +208,5 @@
 
             <a href="/archive">Archive</a>
         </p>
-        
-    <script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/jquery.js"></script>
-    <script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/underscore.js"></script>
-    <script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/backbone.js"></script>
-
-    <script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/json2.js"></script>
-    <!--<script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/buzz.js"></script>-->
-     <script src="https://raw.github.com/lpenguin/mnplayer-js/master/j/soundmanager2.js"></script>
-    <script src="https://raw.github.com/lpenguin/mnplayer-js/master/js/mnplayer.js"></script>
-    
     </body>
 </html>

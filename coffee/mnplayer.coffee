@@ -26,6 +26,11 @@ App.Templates.Player = """
 """
 
 Root.mnplayer = ( ) ->
+    if Root.soundManager.plugins and Root.soundManager.plugins instanceof Array
+        for plugin in Root.soundManager.plugins
+            if plugin.ready
+              plugin.ready()
+
     $('.mnplayer').each (i, ob) ->
         message = ""
         url = $(ob).attr 'url'

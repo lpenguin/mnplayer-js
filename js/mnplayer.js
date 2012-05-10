@@ -21,6 +21,14 @@
   App.Templates.Player = "<div class=\"play-button symbol clickable\">|>&nbsp;</div>\n<div class=\"pause-button hidden symbol clickable\">||&nbsp;</div>\n<div class=\"symbol\">[</div>\n<div class=\"seek-bar symbol clickable\"></div>\n<div class=\"symbol\">&nbsp;</div>\n<div class=\"time symbol\"></div>\n<div class=\"symbol\">]</div>\n&nbsp;\n<div class=\"symbol info clickable\">[i]</div>\n<div class=\"symbol home-page clickable\">[?]</div><br/>";
 
   Root.mnplayer = function() {
+    var plugin, _i, _len, _ref;
+    if (Root.soundManager.plugins && Root.soundManager.plugins instanceof Array) {
+      _ref = Root.soundManager.plugins;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        plugin = _ref[_i];
+        if (plugin.ready) plugin.ready();
+      }
+    }
     return $('.mnplayer').each(function(i, ob) {
       var audio, duration, info, message, player, url;
       message = "";
@@ -186,7 +194,7 @@
       console.log(position + '/' + this.barLength);
       out = "";
       for (i = 1, _ref = this.barLength; 1 <= _ref ? i <= _ref : i >= _ref; 1 <= _ref ? i++ : i--) {
-        if (i <= position) {
+        if (i <= position && position !== 1) {
           out += '=';
         } else {
           out += '-';
