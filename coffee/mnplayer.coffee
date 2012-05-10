@@ -91,14 +91,16 @@ App.Views.Player = Backbone.View.extend
         
         if options.duration
             @manualDuration = fromTimer options.duration
-        @info = options.info or ''
+        @info = options.info or @getinfo
         @showMode = 'bar'
         @messagePosition = 0
         @showMessage options.message if options.message
         
+    getinfo: ()->
+      return @audio.id3.artist+" - "+@audio.id3.title
     onid3: ()->
-        if not @info?
-          @info = @audio.id3.artist+" - "+@audio.id3.title
+        if not @info
+          @info = @getinfo()
     setBarMode: () ->
         @showMode = 'bar'
         clearInterval @messageInterval if @messageInterval
