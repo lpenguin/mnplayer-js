@@ -2,7 +2,7 @@ if not window.soundManager.plugins?
   window.soundManager.plugins = []
 
 class mnplayerTumblrPlugin
-  tumblr_cheat_string: '&plead=please-dont-download-this-or-our-lawyers-wont-let-us-host-audio'
+  tumblr_cheat_string: '?plead=please-dont-download-this-or-our-lawyers-wont-let-us-host-audio'
   
   ready: ()->
     str = @tumblr_cheat_string

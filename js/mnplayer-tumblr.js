@@ -7,7 +7,7 @@
 
     function mnplayerTumblrPlugin() {}
 
-    mnplayerTumblrPlugin.prototype.tumblr_cheat_string = '&plead=please-dont-download-this-or-our-lawyers-wont-let-us-host-audio';
+    mnplayerTumblrPlugin.prototype.tumblr_cheat_string = '?plead=please-dont-download-this-or-our-lawyers-wont-let-us-host-audio';
 
     mnplayerTumblrPlugin.prototype.ready = function() {
       var str;

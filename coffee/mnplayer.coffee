@@ -34,9 +34,6 @@ Root.mnplayer = ( ) ->
     $('.mnplayer').each (i, ob) ->
         message = ""
         url = $(ob).attr 'url'
-
-        #audio = new buzz.sound url, { preload:true, loop:false}
-            
         audio = soundManager.createSound id:'sound'+i, url: url, autoLoad: true
         duration = $(ob).attr 'duration'
         info = $(ob).attr 'info'
