@@ -98,10 +98,10 @@ App.Models.Sound = Backbone.Model.extend
             App.soundCounter++
         @audio = soundManager.createSound id:'sound'+App.soundCounter, url: url, autoLoad: true
         
-    #    @audio._whileloading @_event_durationchange, this
-    #    @audio._whileplaying @_event_whileplaying, this
-    #    @audio._ondataerror @_event_dataerror, this
-    #    @audio._onid3 @_event_onid3, this
+        @audio._whileloading @_event_durationchange, this
+        @audio._whileplaying @_event_whileplaying, this
+        @audio._ondataerror @_event_dataerror, this
+        @audio._onid3 @_event_onid3, this
         @events = onid3: 
                     func: null
                     context: null
